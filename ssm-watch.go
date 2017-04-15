@@ -22,7 +22,7 @@ func init() {
 	// log.SetOutput(os.Stdout)
 
 	// Only log the warning severity or above.
-	log.SetLevel(log.DebugLevel)
+	// log.SetLevel(log.DebugLevel)
 }
 
 
@@ -32,6 +32,10 @@ func main() {
 	if err != nil {
 		log.WithError(err)
 		os.Exit(1)
+	}
+
+	if config.Verbose {
+		log.SetLevel(log.DebugLevel)
 	}
 
 	env := environ(os.Environ())
