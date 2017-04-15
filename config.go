@@ -24,11 +24,13 @@ func parseArgs(args []string) (*Config, []string, error) {
 
 	var myFlags arrayFlags
 	execCommand := flag.NewFlagSet("exec", flag.ContinueOnError)
+	intervalPtr := execCommand.Int("interval", 60, "interval 60")
 	execCommand.Var(&myFlags, "var", "var FOO=my_ssm_parameter_key")
 
 	switch args[0] {
 	case "exec":
 		execCommand.Parse(args[1:])
+		config.Interval = *intervalPtr
 		command := execCommand.Args()
 
 		if len(myFlags) < 1 {
@@ -57,4 +59,5 @@ func parseArgs(args []string) (*Config, []string, error) {
 type Config struct {
 	Command string
 	Variables map[string]string
+	Interval int
 }

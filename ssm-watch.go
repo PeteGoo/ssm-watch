@@ -40,7 +40,7 @@ func main() {
 
 	cmd := exec.Command(command[0], command[1:]...)
 
-	ticker := time.NewTicker(time.Second * 30)
+	ticker := time.NewTicker(time.Second * time.Duration(config.Interval))
 
 	go func() {
 		for range ticker.C {
@@ -75,6 +75,9 @@ func main() {
 
 func updateParameters(config *Config, env *environ) bool {
 	for k, v := range config.Variables {
+
+		log.Debugf("Checking SSM parameter %s\n", k)
+
 		value, err := getSsmParameter(v)
 		if err != nil {
 			log.WithError(err)
