@@ -37,13 +37,8 @@ func parseArgs(args []string) (*Config, []string, error) {
 			return nil, nil, fmt.Errorf("No variables specified.")
 		}
 
-		for _, pair := range myFlags {
-
-			kvp := strings.SplitN(pair, "=", 2)
-			if len(kvp) < 2 {
-				return nil, nil, fmt.Errorf("Could not parse variable %s", pair)
-			}
-			config.Variables[kvp[0]] = kvp[1]
+		if err := extractVariablesFromFlags(myFlags, config); err != nil {
+			return nil ,nil, err
 		}
 
 		if len(command) < 1 {
@@ -54,6 +49,18 @@ func parseArgs(args []string) (*Config, []string, error) {
 	}
 
 	return nil, nil, fmt.Errorf("%q is not a valid command.\n", args[0])
+}
+
+func extractVariablesFromFlags(myFlags arrayFlags, config *Config) error {
+	for _, pair := range myFlags {
+
+		kvp := strings.SplitN(pair, "=", 2)
+		if len(kvp) < 2 {
+			return fmt.Errorf("Could not parse variable %s", pair)
+		}
+		config.Variables[kvp[0]] = kvp[1]
+	}
+	return nil
 }
 
 type Config struct {
